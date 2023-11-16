@@ -36,7 +36,12 @@ func AssignJobsToWorkers(mr *MapReduce, doneChannel chan int, job JobType, nJobs
 			args := &DoJobArgs{mr.file, job, jobNum, nJobsOther}
 			var reply DoJobReply
 
-			call
+			ok := call(worker, "Worker.DoJob", args, &reply)
+
+			if ok == true {
+				doneChannel <- l
+				mr.registerChannel <- worker
+			}
 		}(i)
 	}
 }
