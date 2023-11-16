@@ -28,7 +28,33 @@ func (mr *MapReduce) KillWorkers() *list.List {
 	return l
 }
 
+func AssignJobsToWorkers(mr *MapReduce, doneChannel chan int, job JobType, nJobs int, nJobsOther int) {
+	for i :=0; i < nJobs; i++ {
+		go func(jobNum int) {
+			worker := <-mr.registerChannel
+
+			args := &DoJobArgs{mr.file, job, jobNum, nJobsOther}
+			var reply DoJobReply
+
+			call
+		}(i)
+	}
+}
+
 func (mr *MapReduce) RunMaster() *list.List {
+	mapDoneChannel, reduceDoneChannel := make(chan int, mr.nMap), make(chan int, mr.nReduce)
+	AssignJobsToWorkers(mr, mapDoneChannel, Map, mr.nMap, mr.nReduce)
+
+	for i := 0; i < mr.nMap; i++ {
+		<-mapDoneChannel
+	}
+
+	AssignJobsToWorkers(mr, reduceDoneChannel, Reduce, mr.nReduce, mr.nMap)
+
+	for i := 0; i < mr.nMap; i++ {
+		<-reduceDoneChannel
+	}
+	
 	// Your code here
 	return mr.KillWorkers()
 }
