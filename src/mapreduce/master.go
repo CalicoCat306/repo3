@@ -41,8 +41,7 @@ func AssignJobsToWorkers(mr *MapReduce, doneChannel chan int, job JobType, nJobs
 			if ok == true {
 				doneChannel <- l
 				mr.registerChannel <- worker
-			}
-			else{
+			}else{
 				doneChannel <- l
 				AssignJobsToWorkers(mr, doneChannel, job, nJobs, nJobsOther)
 			}
