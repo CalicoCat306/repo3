@@ -16,7 +16,8 @@ import(
 // value should be a list of key/value pairs, each represented
 // by a mapreduce.KeyValue.
 func Map(value string) *list.List {
-	words := strings.Fields(value)
+	// words := strings.Fields(value)
+	words := strings.FieldsFunc(value, f)
 	wordMap := list.New()
 	
 	for _, word := range words {
