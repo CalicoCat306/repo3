@@ -1,7 +1,9 @@
 package main
 
 import "os"
+
 import "fmt"
+
 import "mapreduce"
 
 import "container/list"
